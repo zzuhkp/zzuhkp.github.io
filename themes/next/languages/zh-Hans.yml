@@ -1,0 +1,29 @@
+menu:
+  home: 首页
+  archives: 归档
+  categories: 分类
+  schedule: 日程表
+  tags: 标签
+  about: 关于
+  search: 搜索
+  commonweal: 公益404
+  something: 有料
+  
+menu_icons:
+  enable: true
+  # Icon Mapping.
+  home: home
+  about: user
+  categories: th
+  tags: tags
+  archives: archive
+  commonweal: heartbeat
+  
+post:
+  posted: 发表于
+  visitors: 阅读次数
+  updated: 更新于
+  in: 分类于
+  read_more: 阅读全文
+  untitled: 未命名
+  toc_empty: 此文章未包含目录
