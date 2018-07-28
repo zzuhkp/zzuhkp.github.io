@@ -108,18 +108,18 @@
 
 
 
-  <meta name="description" content="这是我的第一篇笔记，以后学习做记录，方便以后再看">
+  <meta name="description" content="这是我的第一篇笔记，方便以后查看">
 <meta name="keywords" content="git,笔记">
 <meta property="og:type" content="article">
 <meta property="og:title" content="git学习笔记">
 <meta property="og:url" content="http://zzhkp.com/2018/07/28/git学习笔记/index.html">
 <meta property="og:site_name" content="zzuhkp&#39;s blog">
-<meta property="og:description" content="这是我的第一篇笔记，以后学习做记录，方便以后再看">
+<meta property="og:description" content="这是我的第一篇笔记，方便以后查看">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-07-28T13:32:22.047Z">
+<meta property="og:updated_time" content="2018-07-28T14:09:53.273Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="git学习笔记">
-<meta name="twitter:description" content="这是我的第一篇笔记，以后学习做记录，方便以后再看">
+<meta name="twitter:description" content="这是我的第一篇笔记，方便以后查看">
 
 
 
@@ -369,7 +369,7 @@
                 
               
 
-              <time title="Post created: 2018-07-28 20:52:49 / Updated at: 21:32:22" itemprop="dateCreated datePublished" datetime="2018-07-28T20:52:49+08:00">2018-07-28</time>
+              <time title="Post created: 2018-07-28 20:52:49 / Updated at: 22:09:53" itemprop="dateCreated datePublished" datetime="2018-07-28T20:52:49+08:00">2018-07-28</time>
             
 
             
@@ -413,7 +413,7 @@
           
 
           
-              <div class="post-description">这是我的第一篇笔记，以后学习做记录，方便以后再看</div>
+              <div class="post-description">这是我的第一篇笔记，方便以后查看</div>
           
 
         </div>
@@ -436,15 +436,22 @@
 <li>设置邮箱：git config –global user.email “<a href="mailto:zzuhkp@163.com" target="_blank" rel="noopener">zzuhkp@163.com</a>“</li>
 <li>创建版本库：<ul>
 <li>创建目录：mkdir learngit &amp;&amp; cd learngit</li>
-<li>把目录变成git可以管理的仓库：git init<br>[root@dp learngit]# git init<br>Initialized empty Git repository in /opt/java/practice/learngit/.git/<br>注意：git使用.git目录跟踪管理版本库，一般情况不要手动修改.git目录的文件</li>
+<li>把目录变成git可以管理的仓库：git init  </li>
 </ul>
 </li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@dp learngit]# git init  </span><br><span class="line">Initialized empty Git repository in /opt/java/practice/learngit/.git/</span><br></pre></td></tr></table></figure>
+<pre><code>注意：git使用.git目录跟踪管理版本库，一般情况不要手动修改.git目录的文件
+</code></pre><ul>
 <li>添加文件到版本库：<ul>
 <li>创建文件到版本库所在目录：touch readme.txt</li>
 <li>使用命令 git add把文件添加到版本库中的暂存区：git add readme.txt</li>
-<li>使用命令git commit把暂存区中的文件提交到仓库：git commit -m “wrote a readme file”<br>-m后面输入表示本次提交的说明<br>[root@dp learngit]# git commit -m “wrote a readme file”<br>[master (root-commit) 992fc83] wrote a readme file<br>1 file changed, 2 insertions(+)<br>create mode 100644 readme.txt</li>
+<li>使用命令git commit把暂存区中的文件提交到仓库：git commit -m “wrote a readme file”<br>-m后面输入表示本次提交的说明  </li>
 </ul>
 </li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@dp learngit]# git commit -m &quot;wrote a readme file&quot;</span><br><span class="line">[master (root-commit) 992fc83] wrote a readme file</span><br><span class="line">1 file changed, 2 insertions(+)</span><br><span class="line">create mode 100644 readme.txt</span><br></pre></td></tr></table></figure>
+<ul>
 <li>查看仓库当前状态：git status  </li>
 </ul>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@dp learngit]# git status</span><br><span class="line"># On branch master</span><br><span class="line"># Changes not staged for commit:</span><br><span class="line">#   (use &quot;git add &lt;file&gt;...&quot; to update what will be committed)</span><br><span class="line">#   (use &quot;git checkout -- &lt;file&gt;...&quot; to discard changes in working directory)</span><br><span class="line">#</span><br><span class="line">#	modified:   readme.txt</span><br><span class="line">#</span><br><span class="line">no changes added to commit (use &quot;git add&quot; and/or &quot;git commit -a&quot;)</span><br></pre></td></tr></table></figure>
@@ -559,7 +566,7 @@
                   <a href="/archives/">
                 
                     <span class="site-state-item-count">1</span>
-                    <span class="site-state-item-name">posting</span>
+                    <span class="site-state-item-name">Artikel</span>
                   </a>
                 </div>
               
@@ -574,7 +581,7 @@
                       
                     
                     <span class="site-state-item-count">1</span>
-                    <span class="site-state-item-name">kategori</span>
+                    <span class="site-state-item-name">Kategorien</span>
                   
                 </div>
               
@@ -591,7 +598,7 @@
                       
                     
                     <span class="site-state-item-count">2</span>
-                    <span class="site-state-item-name">tags</span>
+                    <span class="site-state-item-name">Tags</span>
                   
                 </div>
               
@@ -644,7 +651,7 @@
 
 
 
-  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> v3.7.1</div>
+  <div class="powered-by">Erstellt mit  <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> v3.7.1</div>
 
 
 
@@ -652,7 +659,7 @@
 
 
 
-  <div class="theme-info">Tema &mdash; <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Mist</a> v6.3.0</div>
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Mist</a> v6.3.0</div>
 
 
 
