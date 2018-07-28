@@ -121,7 +121,7 @@ menu:
   tags: /tags/ || tags
   categories: /categories/ || th
   archives: /archives/ || archive
-  schedule: /schedule/ || calendar
+  #schedule: /schedule/ || calendar
   about: /about/ || user
   #sitemap: /sitemap.xml || sitemap
   #commonweal: /404/ || heartbeat
@@ -478,8 +478,8 @@ baidu_analytics: bd8ef0371e033f4f1bef4bf84d40dce7
 
 # Disqus
 disqus:
-  enable: false
-  shortname:
+  enable: true
+  shortname: zzuhkp
   count: true
   lazyload: false
 

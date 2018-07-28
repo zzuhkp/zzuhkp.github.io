@@ -2,9 +2,12 @@
 title: git学习笔记
 date: 2018-07-28 20:52:49
 uddated: 2018-07-28 22:09:35
-categories: 版本控制 
-tags: [git,笔记] 
-description: 这是我的第一篇笔记，方便以后查看
+categories: 
+- 版本控制 
+tags: 
+- git
+- 笔记 
+description: 这是我的第一篇笔记，作为记录方便以后查看
 ---
 
 - CentOS安装：yum -install -y git
