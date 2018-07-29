@@ -368,6 +368,7 @@ Deleted branch dev (was 52957a1).
     - Git用<<<<<<<，=======，>>>>>>>标记不同分支的内容
     - git log --graph命令可以看到分支合并图
 
+
 ```
 [zzuhkp@dp learngit]$ git checkout -b feature1
 Switched to a new branch 'feature1'
@@ -442,6 +443,7 @@ fatal: unrecognized argument: --avvrev-commit
 [zzuhkp@dp learngit]$ git branch -d feature1
 Deleted branch feature1 (was 7504349).
 ```
+
 
 ## 分支策略
 - 合并分支时，使用--no-ff参数可以使用普通模式合并，合并后的历史有分支，能看出来曾经做过分支，而fast forward合并看不出来曾经做过分支。
@@ -641,6 +643,7 @@ To https://github.com/zzuhkp/learngit.git
     - 3.2没有冲突或者解决掉冲突后，再利用git push origin <branch-name>推送
     - tip：如果git pull 提示no tracking information,则说明本地分支和远程分支的链接关系没有创建，用命令git branch --set-upstream-to <branch-name> origin/<branch-name>
 
+
 ```
 $ git clone git@github.com:zzuhp/learngit.git
 Cloning into 'learngit'...
@@ -752,6 +755,7 @@ remote: Resolving deltas: 100% (1/1), done.
 To https://github.com/zzuhkp/learngit.git
    64fcabc..8da0df2  dev -> dev
 ```
+
 
 
 
