@@ -1,7 +1,6 @@
 ---
 title: git学习笔记
 date: 2018-07-28 20:52:49
-uddated: 2018-07-28 22:09:35
 categories: 
 - 版本控制 
 tags: 
@@ -154,6 +153,7 @@ be9249a HEAD@{4}: commit (initial): wrote a readme file
     - 撤销工作区修改：git cheakout -- file_name  
         git checkout 其实是用版本库中的版本替换工作区中的版本 
 - 撤销本地版本库修改：git reset --hard commit_id 
+
 ```
 仅修改工作区文件内容撤销修改
 [zzuhkp@dp learngit]$ vim readme.txt 
@@ -227,6 +227,7 @@ be9249a HEAD@{7}: commit (initial): wrote a readme file
 [zzuhkp@dp learngit]$ git reset --hard 410066c
 HEAD is now at 410066c git track changes
 ```
+
 ## 删除文件
 - 从版本库中删除文件
     - 1、从本地删除 rm <file>
@@ -281,6 +282,7 @@ Branch master set up to track remote branch master from origin.
 
 ## 从远程库克隆
 - 克隆远程仓库：git clone 仓库地址
+
 ```
 [zzuhkp@dp ~]$ git clone git@github.com:zzuhkp/gitskills.git
 Cloning into 'gitskills'...
@@ -292,6 +294,7 @@ Receiving objects: 100% (3/3), done.
 total 4
 -rw-rw-r-- 1 zzuhkp zzuhkp 11 Jul 29 16:54 README.md
 ```
+
 # 分支管理
 ## 创建与合并分支
 
@@ -438,6 +441,313 @@ fatal: unrecognized argument: --avvrev-commit
 [zzuhkp@dp learngit]$ git branch -d feature1
 Deleted branch feature1 (was 7504349).
 ```
+## 分支策略
+- 合并分支时，使用--no-ff参数可以使用普通模式合并，合并后的历史有分支，能看出来曾经做过分支，而fast forward合并看不出来曾经做过分支。
 
+```
+[zzuhkp@dp learngit]$ git checkout -b dev
+Switched to a new branch 'dev'
+[zzuhkp@dp learngit]$ vim readme.txt 
+[zzuhkp@dp learngit]$ git add readme.txt 
+[zzuhkp@dp learngit]$ git commit -m "add merge"
+[dev a042964] add merge
+ 1 file changed, 1 insertion(+)
+[zzuhkp@dp learngit]$ git checkout master
+Switched to branch 'master'
+Your branch is ahead of 'origin/master' by 4 commits.
+  (use "git push" to publish your local commits)
+[zzuhkp@dp learngit]$ git merge --no-ff -m "merge with no-ff" dev
+Merge made by the 'recursive' strategy.
+ readme.txt | 1 +
+ 1 file changed, 1 insertion(+)
+[zzuhkp@dp learngit]$ git log --graph --pretty=oneline --abbrev-commit
+*   f6b9db0 merge with no-ff
+|\  
+| * a042964 add merge
+|/  
+*   e30137d conflict fixed
+|\  
+| * 7504349 AND simple
+* | a1d8d59 & simpe
+|/  
+* 52957a1 branch test
+* ecb5583 remove test.txt
+* 16b8ca3 add test.txt
+* 410066c git track changes
+* dc8922f understand how stage work
+* b884506 append GPL
+* 938ec69 add distributed
+* be9249a wrote a readme file
+```
+
+## bug分支
+- 修复bug时，我们会通过创建新的bug分支来进行修改，然后进行合并，最后删除
+- 当手头工作没有完成时，可以通过git stash命令保存工作现场，然后修改bug，修改后，再使用git stash pop命令回到工作现场
+- 保存工作现场：git stash
+- 查看保存的工作现场列表：git stash list
+- 恢复工作现场:
+    - 方法1：使用git stash apply <stash@{0}>  
+        使用该命令恢复后stash内容并不删除，需要用git stash drop命令删除
+    - 方法2：使用git stash pop，恢复的时候同时把stash内容也删除了
+
+```
+[zzuhkp@dp learngit]$ git checkout -b dev
+Switched to a new branch 'dev'
+[zzuhkp@dp learngit]$ touch hello.py
+[zzuhkp@dp learngit]$ vim readme.txt 
+[zzuhkp@dp learngit]$ git add hello.py
+[zzuhkp@dp learngit]$ git status
+# On branch dev
+# Changes to be committed:
+#   (use "git reset HEAD <file>..." to unstage)
+#
+#	new file:   hello.py
+#
+# Changes not staged for commit:
+#   (use "git add <file>..." to update what will be committed)
+#   (use "git checkout -- <file>..." to discard changes in working directory)
+#
+#	modified:   readme.txt
+#
+[zzuhkp@dp learngit]$ git stash
+Saved working directory and index state WIP on dev: f3bdbac merged bug fix 101
+HEAD is now at f3bdbac merged bug fix 101
+[zzuhkp@dp learngit]$ git status
+# On branch dev
+nothing to commit, working directory clean
+[zzuhkp@dp learngit]$ git checkout master
+Switched to branch 'master'
+Your branch is ahead of 'origin/master' by 8 commits.
+  (use "git push" to publish your local commits)
+[zzuhkp@dp learngit]$ git checkout -b issue-101
+Switched to a new branch 'issue-101'
+[zzuhkp@dp learngit]$ vim readme.txt 
+[zzuhkp@dp learngit]$ git add readme.txt 
+[zzuhkp@dp learngit]$ git commit -m "fix bug 101"
+[issue-101 bc66d34] fix bug 101
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+[zzuhkp@dp learngit]$ git checkout master
+Switched to branch 'master'
+Your branch is ahead of 'origin/master' by 8 commits.
+  (use "git push" to publish your local commits)
+[zzuhkp@dp learngit]$ git merge --no-ff -m "merged bug fix 101" issue-101
+Merge made by the 'recursive' strategy.
+ readme.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+[zzuhkp@dp learngit]$ git checkout dev
+Switched to branch 'dev'
+[zzuhkp@dp learngit]$ git status
+# On branch dev
+nothing to commit, working directory clean
+[zzuhkp@dp learngit]$ git stash list
+stash@{0}: WIP on dev: f3bdbac merged bug fix 101
+[zzuhkp@dp learngit]$ git stash pop
+# On branch dev
+# Changes to be committed:
+#   (use "git reset HEAD <file>..." to unstage)
+#
+#	new file:   hello.py
+#
+# Changes not staged for commit:
+#   (use "git add <file>..." to update what will be committed)
+#   (use "git checkout -- <file>..." to discard changes in working directory)
+#
+#	modified:   readme.txt
+#
+Dropped refs/stash@{0} (39b84099689796e851697a262d32191d587cbc75)
+[zzuhkp@dp learngit]$ git stash list
+[zzuhkp@dp learngit]$ 
+```
+
+## Feature分支
+- 丢弃没有被合并过的分支：git branch -D <name>
+
+```
+[zzuhkp@dp learngit]$ git checkout -b feature-vulcan
+Switched to a new branch 'feature-vulcan'
+[zzuhkp@dp learngit]$ touch vulcan.py
+[zzuhkp@dp learngit]$ git add vulcan.py 
+[zzuhkp@dp learngit]$ git status
+# On branch feature-vulcan
+# Changes to be committed:
+#   (use "git reset HEAD <file>..." to unstage)
+#
+#	new file:   vulcan.py
+#
+[zzuhkp@dp learngit]$ git commit -m "add feature vulcan"
+[feature-vulcan 0152991] add feature vulcan
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ create mode 100644 vulcan.py
+[zzuhkp@dp learngit]$ git checkout master
+Switched to branch 'master'
+Your branch is ahead of 'origin/master' by 10 commits.
+  (use "git push" to publish your local commits)
+[zzuhkp@dp learngit]$ git branch -d feature-vulcan
+error: The branch 'feature-vulcan' is not fully merged.
+If you are sure you want to delete it, run 'git branch -D feature-vulcan'.
+[zzuhkp@dp learngit]$ git branch -D feature-vulcan
+Deleted branch feature-vulcan (was 0152991).
+```
+
+## 多人协作
+- 查看远程库信息:git remote [-v]  
+    -v参数可以显示更详细的信息,如果没有推送信息则看不到push的地址
+
+```
+[zzuhkp@dp learngit]$ git remote
+origin
+[zzuhkp@dp learngit]$ git remote -v
+origin	https://github.com/zzuhkp/learngit.git (fetch)
+origin	https://github.com/zzuhkp/learngit.git (push)
+```
+
+- 推送分支：git push origin <branch_name>
+    - master分支是主分支，需要时刻与远程同步
+    - dev分支是开发分支，需要与远程同步
+    - bug分支只用于在本地修复bug，不必推送到远程
+    - feature分支是否推送取决于是否和其他人合作在上面开发
+
+```
+[zzuhkp@dp learngit]$ git push origin master
+Username for 'https://github.com': zzuhkp
+Password for 'https://zzuhkp@github.com': 
+Counting objects: 26, done.
+Compressing objects: 100% (24/24), done.
+Writing objects: 100% (24/24), 2.05 KiB | 0 bytes/s, done.
+Total 24 (delta 11), reused 0 (delta 0)
+remote: Resolving deltas: 100% (11/11), completed with 1 local object.
+To https://github.com/zzuhkp/learngit.git
+   ecb5583..1f8f980  master -> master
+[zzuhkp@dp learngit]$ git push origin dev
+Username for 'https://github.com': zzuhkp
+Password for 'https://zzuhkp@github.com': 
+Counting objects: 4, done.
+Compressing objects: 100% (2/2), done.
+Writing objects: 100% (3/3), 294 bytes | 0 bytes/s, done.
+Total 3 (delta 0), reused 0 (delta 0)
+To https://github.com/zzuhkp/learngit.git
+ * [new branch]      dev -> dev
+```
+
+- 抓取分支：git clone git@github.com:zzuhp/learngit.git
+- 在本地创建和远程分支对应的分支：git checkout -b branch-name origin/branch-name
+    默认情况抓取分支时只能看到本地的master分支
+- 多人协作工作模式：
+    - 1、首先，可以试图使用git push origin <branch-name>推送自己的修改
+    - 2、如果推送失败，则因为远程分支比自己本地更新，需要先用git pull试图合并
+    - 3.1、如果合并有冲突，则解决冲突，并在本地提交
+    - 3.2没有冲突或者解决掉冲突后，再利用git push origin <branch-name>推送
+    - tip：如果git pull 提示no tracking information,则说明本地分支和远程分支的链接关系没有创建，用命令git branch --set-upstream-to <branch-name> origin/<branch-name>
+```
+$ git clone git@github.com:zzuhp/learngit.git
+Cloning into 'learngit'...
+ERROR: Repository not found.
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+
+hkp20@LAPTOP-JQGTORVI MINGW64 /g/Project/GitHub
+$ git clone git@github.com:zzuhkp/learngit.git
+Cloning into 'learngit'...
+remote: Counting objects: 46, done.
+remote: Compressing objects: 100% (26/26), done.
+remote: Total 46 (delta 15), reused 46 (delta 15), pack-reused 0
+Receiving objects: 100% (46/46), done.
+Resolving deltas: 100% (15/15), done.
+
+hkp20@LAPTOP-JQGTORVI MINGW64 /g/Project/GitHub
+$ cd learngit/
+
+hkp20@LAPTOP-JQGTORVI MINGW64 /g/Project/GitHub/learngit (master)
+$ git branch
+* master
+
+hkp20@LAPTOP-JQGTORVI MINGW64 /g/Project/GitHub/learngit (master)
+$ git checkout -b dev origin/dev
+Switched to a new branch 'dev'
+Branch 'dev' set up to track remote branch 'dev' from 'origin'.
+
+hkp20@LAPTOP-JQGTORVI MINGW64 /g/Project/GitHub/learngit (dev)
+$ touch env.txt
+
+hkp20@LAPTOP-JQGTORVI MINGW64 /g/Project/GitHub/learngit (dev)
+$ git add env.txt
+
+hkp20@LAPTOP-JQGTORVI MINGW64 /g/Project/GitHub/learngit (dev)
+$ git commit -m "add env"
+[dev 49b54ca] add env
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ create mode 100644 env.txt
+
+hkp20@LAPTOP-JQGTORVI MINGW64 /g/Project/GitHub/learngit (dev)
+$ git push origin dev
+Enumerating objects: 3, done.
+Counting objects: 100% (3/3), done.
+Delta compression using up to 8 threads.
+Compressing objects: 100% (2/2), done.
+Writing objects: 100% (2/2), 219 bytes | 219.00 KiB/s, done.
+Total 2 (delta 1), reused 0 (delta 0)
+remote: Resolving deltas: 100% (1/1), completed with 1 local object.
+To github.com:zzuhkp/learngit.git
+   a6ae793..49b54ca  dev -> dev
+```
+
+```
+[zzuhkp@dp learngit]$ vim env.txt
+[zzuhkp@dp learngit]$ git add env.txt 
+[zzuhkp@dp learngit]$ git commit -m "add new env"
+[dev ad5dbb6] add new env
+ 1 file changed, 1 insertion(+)
+ create mode 100644 env.txt
+[zzuhkp@dp learngit]$ git push origin dev
+Username for 'https://github.com': zzuhkp
+Password for 'https://zzuhkp@github.com': 
+To https://github.com/zzuhkp/learngit.git
+ ! [rejected]        dev -> dev (fetch first)
+error: failed to push some refs to 'https://github.com/zzuhkp/learngit.git'
+hint: Updates were rejected because the remote contains work that you do
+hint: not have locally. This is usually caused by another repository pushing
+hint: to the same ref. You may want to first merge the remote changes (e.g.,
+hint: 'git pull') before pushing again.
+hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+[zzuhkp@dp learngit]$ git pull
+remote: Counting objects: 5, done.
+remote: Compressing objects: 100% (3/3), done.
+Unpacking objects: 100% (5/5), done.
+remote: Total 5 (delta 1), reused 5 (delta 1), pack-reused 0
+From https://github.com/zzuhkp/learngit
+   a6ae793..64fcabc  dev        -> origin/dev
+There is no tracking information for the current branch.
+Please specify which branch you want to merge with.
+See git-pull(1) for details
+
+    git pull <remote> <branch>
+
+If you wish to set tracking information for this branch you can do so with:
+
+    git branch --set-upstream-to=origin/<branch> dev
+
+[zzuhkp@dp learngit]$  git branch --set-upstream-to=origin/dev dev
+Branch dev set up to track remote branch dev from origin.
+[zzuhkp@dp learngit]$ git pull
+Auto-merging env.txt
+CONFLICT (add/add): Merge conflict in env.txt
+Automatic merge failed; fix conflicts and then commit the result.
+[zzuhkp@dp learngit]$ vim env.txt
+[zzuhkp@dp learngit]$ git add env.txt 
+[zzuhkp@dp learngit]$ git commit -m "fix env conflict"
+[dev 8da0df2] fix env conflict
+[zzuhkp@dp learngit]$ git push origin dev
+Username for 'https://github.com': zzuhkp
+Password for 'https://zzuhkp@github.com': 
+Counting objects: 7, done.
+Compressing objects: 100% (3/3), done.
+Writing objects: 100% (4/4), 448 bytes | 0 bytes/s, done.
+Total 4 (delta 1), reused 0 (delta 0)
+remote: Resolving deltas: 100% (1/1), done.
+To https://github.com/zzuhkp/learngit.git
+   64fcabc..8da0df2  dev -> dev
+```
 
 
