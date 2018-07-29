@@ -494,16 +494,16 @@ changyan:
 # You can get your appid and appkey from https://leancloud.cn
 # more info please open https://valine.js.org
 valine:
-  enable: false # When enable is set to be true, leancloud_visitors is recommended to be closed for the re-initialization problem within different leancloud adk version.
-  appid:  # your leancloud application appid
-  appkey:  # your leancloud application appkey
-  notify: false # mail notifier , https://github.com/xCss/Valine/wiki
-  verify: false # Verification code
-  placeholder: Just go go # comment box placeholder
+  enable: true
+  appid:  SPcuA34NIWi8vJgruDiDiFlS-gzGzoHsz
+  appkey:  sCkvUF7tE2nnOXkWTxsjPRek
+  notify: false 
+  verify: false 
+  placeholder: ヾﾉ≧∀≦)o 来呀！快活呀！~
   avatar: mm # gravatar style
   guest_info: nick,mail,link # custom comment header
-  pageSize: 10 # pagination size
-  visitor: false # leancloud-counter-security is not supported for now. When visitor is set to be true, appid and appkey are recommended to be the same as leancloud_visitors' for counter compatibility. Article reading statistic https://valine.js.org/visitor.html
+  pageSize: 10 
+  visitor: false 
 
 # Support for LiveRe comments system.
 # You can get your uid from https://livere.com/insight/myCode (General web site)
