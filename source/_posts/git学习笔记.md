@@ -265,6 +265,9 @@ rm 'test.txt'
 - 推送master分支内容到远程库：git push -u origin master  
     -u参数将本地master分支和远程master分支关联，以后本地提交后可以通过命令git push origin master将本地master分支最新修改推送至远程库
 
+
+- 删除本地远程库记录：git remote rm <name>
+
 ```
 [zzuhkp@dp learngit]$ git remote add origin https://github.com/zzuhkp/learngit.git
 [zzuhkp@dp learngit]$ git push -u origin master
@@ -756,6 +759,29 @@ To https://github.com/zzuhkp/learngit.git
    64fcabc..8da0df2  dev -> dev
 ```
 
+# 标签管理
 
+- 新建标签：git tag <tagname> [commit_id],默认为HEAD,也可以指定一个commit id
+- 新建标签并指定标签信息：git tag -a <tagname> -m "tag info"
+- 查看所有标签：git tag
+- 查看标签说明文字：git show <tagname>
+- 推送本地标签：git push origin <tagname>
+- 推送本地全部未推送标签：git push origin --tags
+- 删除本地标签：git tag -d <tagname>
+- 删除远程标签：git push origin :refs/tags/<tagname>
+
+# 自定义Git
+
+- 显示颜色：git config --global color.ui true
+- 忽略某些文件：在工作区中创建文件.gitignore文件，在.gitignore文件中编写忽略的文件名称，每行写一个文件名称
+- 强制提交忽略文件到暂存区：git add -f <file_name>
+- 检查文件被忽略配置：git check-ignore -v <file_name>
+- 配置别名：git config --global alias.<alias_name> origin_name  
+    --global针对当前用户起作用，如果不加针对当前仓库起作用
+- 每个仓库的配置放在.git/config文件中，当前用户的Git配置文件放在用户主目录下的.gitonfig中
+
+```
+[zzuhkp@dp ~]$ git config --global alias.st status
+```
 
 
