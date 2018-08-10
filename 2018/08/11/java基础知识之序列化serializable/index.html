@@ -116,7 +116,7 @@
 <meta property="og:site_name" content="zzuhkp&#39;s blog">
 <meta property="og:description" content="序列化是java中的基础知识，在远程过程调用RPC中需要对java类进行序列化和反序列化。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-08-10T17:19:29.824Z">
+<meta property="og:updated_time" content="2018-08-10T17:22:18.855Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="java基础知识之序列化serializable">
 <meta name="twitter:description" content="序列化是java中的基础知识，在远程过程调用RPC中需要对java类进行序列化和反序列化。">
@@ -361,7 +361,7 @@
                 
               
 
-              <time title="创建时间：2018-08-11 01:06:54 / 修改时间：01:19:29" itemprop="dateCreated datePublished" datetime="2018-08-11T01:06:54+08:00">2018-08-11</time>
+              <time title="创建时间：2018-08-11 01:06:54 / 修改时间：01:22:18" itemprop="dateCreated datePublished" datetime="2018-08-11T01:06:54+08:00">2018-08-11</time>
             
 
             
@@ -492,7 +492,7 @@
 </ul>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.zzuhkp.javanote.serializable;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException, ClassNotFoundException </span>&#123;</span><br><span class="line">        User user = <span class="keyword">new</span> User(<span class="string">"zzuhkp"</span>, <span class="string">"123456"</span>);</span><br><span class="line">        user.setId(<span class="string">"123"</span>);</span><br><span class="line">        writeObj(user);</span><br><span class="line">        User user1= (User) readObj();</span><br><span class="line">        System.out.println(user1.toString());</span><br><span class="line">        System.out.println(<span class="string">"id:"</span>+user1.getId());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//省略代码和实例一相同，未做改变</span></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <ul>
-<li>程序运行结果如下所示，并且可以看到反序列化时程序调用了User的无参构造方法创建了User的实例；</li>
+<li>程序运行结果如下所示，可以看到反序列化并没有把前面设置的父类成员变量id的值打印出来，并且可以看到反序列化时程序调用了User的无参构造方法创建了User的实例；</li>
 </ul>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">CommonVO no arg constructor</span><br><span class="line">User with arg constructor</span><br><span class="line">CommonVO no arg constructor</span><br><span class="line">User&#123;username=<span class="string">'zzuhkp'</span>, password=<span class="string">'123456'</span>&#125;</span><br><span class="line">id:<span class="keyword">null</span></span><br></pre></td></tr></table></figure>
       
