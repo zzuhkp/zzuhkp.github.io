@@ -108,24 +108,25 @@
 
 
 
-  <meta name="description" content="礼物不需要太贵，只要香榭的落叶">
-<meta name="keywords" content="zzuhkp blog 香榭 落叶">
-<meta property="og:type" content="website">
-<meta property="og:title" content="zzuhkp&#39;s blog">
-<meta property="og:url" content="http://zzhkp.com/index.html">
+  <meta name="description" content="一、序列化概念：将对象在内存中的状态保存下来，在需要的时候获取。    序列化：将对象转换为字节数组，以便在网络传输或存储。   反序列化：将字节数组转换为对象。    二、序列化特点:    类必须实现Serializable接口，父类未实现Serializable接口则父类不参与序列化，父类实现Serializable接口后子类不需要显式实现Serializable接口； 类的静态变量不参与序">
+<meta name="keywords" content="java,序列化,serializable">
+<meta property="og:type" content="article">
+<meta property="og:title" content="java基础知识之序列化serializable">
+<meta property="og:url" content="http://zzhkp.com/2018/08/11/java基础知识之序列化serializable/index.html">
 <meta property="og:site_name" content="zzuhkp&#39;s blog">
-<meta property="og:description" content="礼物不需要太贵，只要香榭的落叶">
+<meta property="og:description" content="一、序列化概念：将对象在内存中的状态保存下来，在需要的时候获取。    序列化：将对象转换为字节数组，以便在网络传输或存储。   反序列化：将字节数组转换为对象。    二、序列化特点:    类必须实现Serializable接口，父类未实现Serializable接口则父类不参与序列化，父类实现Serializable接口后子类不需要显式实现Serializable接口； 类的静态变量不参与序">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-08-10T17:11:41.863Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="zzuhkp&#39;s blog">
-<meta name="twitter:description" content="礼物不需要太贵，只要香榭的落叶">
+<meta name="twitter:title" content="java基础知识之序列化serializable">
+<meta name="twitter:description" content="一、序列化概念：将对象在内存中的状态保存下来，在需要的时候获取。    序列化：将对象转换为字节数组，以便在网络传输或存储。   反序列化：将字节数组转换为对象。    二、序列化特点:    类必须实现Serializable接口，父类未实现Serializable接口则父类不参与序列化，父类实现Serializable接口后子类不需要显式实现Serializable接口； 类的静态变量不参与序">
 
 
 
 
 
 
-  <link rel="canonical" href="http://zzhkp.com/"/>
+  <link rel="canonical" href="http://zzhkp.com/2018/08/11/java基础知识之序列化serializable/"/>
 
 
 
@@ -135,7 +136,7 @@
   };
 </script>
 
-  <title>zzuhkp's blog</title>
+  <title>java基础知识之序列化serializable | zzuhkp's blog</title>
   
 
 
@@ -192,8 +193,7 @@
     
   
 
-  <div class="container sidebar-position-right 
-  page-home">
+  <div class="container sidebar-position-right page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -234,7 +234,7 @@
         
         
           
-          <li class="menu-item menu-item-home menu-item-active">
+          <li class="menu-item menu-item-home">
     <a href="/" rel="section">
       <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
   </li>
@@ -302,9 +302,9 @@
           
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
 
@@ -336,11 +336,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/08/11/java基础知识之序列化serializable/" itemprop="url">
-                  java基础知识之序列化serializable
-                </a>
+          <h1 class="post-title" itemprop="name headline">java基础知识之序列化serializable
               
             
           </h1>
@@ -435,9 +431,7 @@
       
 
       
-        
-          
-            <p><strong>一、序列化概念</strong>：将对象在内存中的状态保存下来，在需要的时候获取。  </p>
+        <p><strong>一、序列化概念</strong>：将对象在内存中的状态保存下来，在需要的时候获取。  </p>
 <ul>
 <li>序列化：将对象转换为字节数组，以便在网络传输或存储。  </li>
 <li>反序列化：将字节数组转换为对象。  </li>
@@ -499,8 +493,6 @@
 <li>程序运行结果如下所示，并且可以看到反序列化时程序调用了User的无参构造方法创建了User的实例；</li>
 </ul>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">CommonVO no arg constructor</span><br><span class="line">User with arg constructor</span><br><span class="line">CommonVO no arg constructor</span><br><span class="line">User&#123;username=<span class="string">'zzuhkp'</span>, password=<span class="string">'123456'</span>&#125;</span><br><span class="line">id:<span class="keyword">null</span></span><br></pre></td></tr></table></figure>
-          
-        
       
     </div>
 
@@ -518,202 +510,40 @@
 
     <footer class="post-footer">
       
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://zzhkp.com/2018/07/28/git学习笔记/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="zzuhkp">
-      <meta itemprop="description" content="礼物不需要太贵，只要香榭的落叶">
-      <meta itemprop="image" content="http://q1.qlogo.cn/g?b=qq&nk=291732073&s=140">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="zzuhkp's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/07/28/git学习笔记/" itemprop="url">
-                  git学习笔记
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2018-07-28 20:52:49" itemprop="dateCreated datePublished" datetime="2018-07-28T20:52:49+08:00">2018-07-28</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2018-08-04 15:03:48" itemprop="dateModified" datetime="2018-08-04T15:03:48+08:00">2018-08-04</time>
-              
-            
-          </span>
-
+        <div class="post-tags">
           
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/版本控制/" itemprop="url" rel="index"><span itemprop="name">版本控制</span></a></span>
-
-                
-                
-              
-            </span>
+            <a href="/tags/java/" rel="tag"><i class="fa fa-tag"></i> java</a>
           
-
+            <a href="/tags/序列化/" rel="tag"><i class="fa fa-tag"></i> 序列化</a>
           
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2018/07/28/git学习笔记/#comments" itemprop="discussionUrl">
-                
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2018/07/28/git学习笔记/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
+            <a href="/tags/serializable/" rel="tag"><i class="fa fa-tag"></i> serializable</a>
           
-
-          
-          
-
-          
-
-		  
-		  
-          
-
-          
-
         </div>
-      </header>
-    
+      
 
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
+      
       
       
 
       
-        
-          这是我的第一篇笔记，作为记录方便以后查看
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/07/28/git学习笔记/">
-              阅读全文 &raquo;
-            </a>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/07/28/git学习笔记/" rel="next" title="git学习笔记">
+                <i class="fa fa-chevron-left"></i> git学习笔记
+              </a>
+            
           </div>
-          <!--/noindex-->
-        
-      
-    </div>
 
-    
+          <span class="post-nav-divider"></span>
 
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
       
 
       
-
-      
-
-      
-      
-        <div class="post-eof"></div>
       
     </footer>
   </div>
@@ -723,14 +553,25 @@
   </article>
 
 
-    
-  </section>
-
-  
+  </div>
 
 
           </div>
           
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+
+  
+
+
 
         </div>
         
@@ -974,6 +815,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
+
+
 
   
 
@@ -988,6 +833,23 @@
     <script id="dsq-count-scr" src="https://zzuhkp.disqus.com/count.js" async></script>
   
 
+  
+    <script type="text/javascript">
+      var disqus_config = function () {
+        this.page.url = 'http://zzhkp.com/2018/08/11/java基础知识之序列化serializable/';
+        this.page.identifier = '2018/08/11/java基础知识之序列化serializable/';
+        this.page.title = 'java基础知识之序列化serializable';
+        };
+      function loadComments () {
+        var d = document, s = d.createElement('script');
+        s.src = 'https://zzuhkp.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      }
+      
+        loadComments();
+      
+    </script>
   
 
 
