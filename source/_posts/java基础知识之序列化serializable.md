@@ -12,8 +12,8 @@ description: 序列化是java中的基础知识，在远程过程调用RPC中需
 
 # 一、序列化概念
 将对象在内存中的状态保存下来，在需要的时候获取。  
-- 序列化：将对象转换为字节数组，以便在网络传输或存储。  
-- 反序列化：将字节数组转换为对象。  
+- 序列化：将对象转换为字节序列，以便在网络传输或存储。  
+- 反序列化：将字节序列转换为对象。  
 
 # 二、序列化特点  
 - 类必须实现Serializable接口，父类未实现Serializable接口则父类不参与序列化，父类实现Serializable接口后子类不需要显式实现Serializable接口；
@@ -257,7 +257,7 @@ public class Main {
 }
 ```
 
-- 序列化后修改User类的静态变量USER_TYPE，程序运行，打印结果如下。反序列化后获取的静态变量的值和序列化之前并不保持一致，说明类的静态变量不参数序列化；transient修饰的password变量在反序列化后并未打印出序列化之前设置的值，说明transient修饰的成员变量也不产生序列化。
+- 序列化后修改User类的静态变量USER_TYPE，程序运行，打印结果如下。反序列化后获取的静态变量的值和序列化之前并不保持一致，说明类的静态变量不参数序列化；transient修饰的password变量在反序列化后并未打印出序列化之前设置的值，说明transient修饰的成员变量也不参与序列化。
 
 ```java
 User with arg constructor
@@ -385,7 +385,7 @@ Exception in thread "main" java.io.InvalidClassException: com.zzuhkp.javanote.se
 	at com.zzuhkp.javanote.serializable.SocketServer.main(SocketServer.java:15)
 ```
 
-# 六、自定义序列化和反序列化
+# 六、序列化对象的writeObject方法和readObject方法
 
 - 序列化时ObjectOutputStream将通过反射获取并尝试调用序列化对象的`private void writeObject(ObjectOutputStream objectOutputStream)`方法进行序列化，如果不存在该方法则ObjectOutputStream使用默认的序列化方式进行序列化。在writeObject方法中可以先调用`objectOutputStream.defaultWriteObject()`方法进行默认的序列化，然后调用ObjectOutputStream类的其他方法序列化；
 - 反序列化时ObjectInputStream将通过反射获取并尝试调用序列化对象的`private void readObject(ObjectInputStream objectInputStream)`方法进行反序列化，如果不存在该方法则ObjectInputStream使用默认的反序列化方式进行反序列化。在readObject中可以先调用`objectInputStream.defaultReadObject()`方法进行默认的反序列化，然后调用ObjectInputStream类的其他方法反序列化；  
@@ -518,3 +518,114 @@ User no arg constructor
 User{username='zzuhkp', password='null'}
 ```
 
+# 八、序列化对象的writeReplace和readResolve方法
+
+- 如果序列化对象包含Object writeReplace() throws ObjectStreamException方法，在序列化时将使用writeReplace方法的返回值作为序列化的对象替代原序列化对象；
+- 如果序列化对象包含Object readResolve() throws ObjectStreamException方法，在反序列化时将使用readResolve方法的返回值作为反序列化的对象替代原反序列化对象。
+
+修改实例一中的User类如下所示，注意添加了writeReplace()和 readResolve()方法。
+
+```
+package com.zzuhkp.javanote.serializable;
+
+import java.io.*;
+
+public class User implements Serializable {
+    private static final long serialVersionUID = 1L;
+    private String username;
+    private String password;
+
+    private Object writeReplace() throws ObjectStreamException{
+        System.out.println("writeReplace() is called");
+        User user=new User("writeReplace Name","123");
+        return user;
+    }
+
+    private Object readResolve() throws ObjectStreamException{
+        System.out.println("readResolve() is called");
+        User user=new User("readResolve Name","456");
+        return user;
+    }
+
+    public User() {
+        System.out.println("User no arg constructor");
+    }
+
+    public User(String username, String password) {
+        System.out.println("User with arg constructor");
+        this.username = username;
+        this.password = password;
+    }
+
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                '}';
+    }
+
+}
+```
+
+测试类Main类代码如下:
+
+```java
+package com.zzuhkp.javanote.serializable;
+
+import java.io.*;
+
+public class Main {
+
+    public static void main(String[] args) throws IOException, ClassNotFoundException {
+        User user = new User("zzuhkp", "123456");
+        writeObj(user);
+        User user1= (User) readObj();
+        System.out.println(user1.toString());
+    }
+
+    public static void writeObj(Object obj) throws IOException {
+        OutputStream outputStream = new FileOutputStream("object.txt");
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+        objectOutputStream.writeObject(obj);
+        objectOutputStream.close();
+    }
+
+    public static Object readObj() throws IOException, ClassNotFoundException {
+        InputStream inputStream = new FileInputStream("object.txt");
+        ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
+        Object obj = objectInputStream.readObject();
+        objectInputStream.close();
+        return obj;
+    }
+
+}
+```
+
+运行结果如下，说明反序列化的对象已经被readResolve()方法的返回值替代。
+
+```java
+User with arg constructor
+writeReplace() is called
+User with arg constructor
+readResolve() is called
+User with arg constructor
+User{username='readResolve Name', password='456'}
+```
