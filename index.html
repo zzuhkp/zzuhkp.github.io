@@ -365,7 +365,7 @@
                 
               
 
-              <time title="创建时间：2019-06-20 09:41:46 / 修改时间：09:42:33" itemprop="dateCreated datePublished" datetime="2019-06-20T09:41:46+08:00">2019-06-20</time>
+              <time title="创建时间：2019-06-20 09:41:46 / 修改时间：10:04:12" itemprop="dateCreated datePublished" datetime="2019-06-20T09:41:46+08:00">2019-06-20</time>
             
 
             
@@ -435,28 +435,14 @@
 
       
         
-          
-            <h1 id="一-Resources包含的方法"><a href="#一-Resources包含的方法" class="headerlink" title="一 Resources包含的方法"></a>一 Resources包含的方法</h1><p>Resources提供各种从类路径获取资源的方法，主要依赖内部的classLoaderWrapper完成资源的查找，提供的方法主要有以下几种</p>
-<ul>
-<li>getResourceAsFile </li>
-<li>getResourceAsProperties</li>
-<li>getResourceAsReader</li>
-<li>getResourceAsStream</li>
-<li>getResourceURL</li>
-<li>getUrlAsProperties</li>
-<li>getUrlAsReader</li>
-<li>getUrlAsStream</li>
-</ul>
-<p>这些方法主要是返回的类型不同，getResourceXXX方法最终都调用了classLoaderWrapper.getResourceAsURL或classLoaderWrapper.getResourceAsStream方法。<br>Resources类的部分代码如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">public class Resources &#123;</span><br><span class="line"></span><br><span class="line">  private static ClassLoaderWrapper classLoaderWrapper = new ClassLoaderWrapper();</span><br><span class="line"></span><br><span class="line">  public static InputStream getResourceAsStream(ClassLoader loader, String resource) throws IOException &#123;</span><br><span class="line">    InputStream in = classLoaderWrapper.getResourceAsStream(resource, loader);</span><br><span class="line">    if (in == null) &#123;</span><br><span class="line">      throw new IOException(&quot;Could not find resource &quot; + resource);</span><br><span class="line">    &#125;</span><br><span class="line">    return in;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  public static URL getResourceURL(ClassLoader loader, String resource) throws IOException &#123;</span><br><span class="line">    URL url = classLoaderWrapper.getResourceAsURL(resource, loader);</span><br><span class="line">    if (url == null) &#123;</span><br><span class="line">      throw new IOException(&quot;Could not find resource &quot; + resource);</span><br><span class="line">    &#125;</span><br><span class="line">    return url;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>可以看到，如果classLoaderWrapper在类路径下找不到资源，将抛出异常，而不是返回null。</p>
-<h1 id="二-ClassLoaderWrapper分析"><a href="#二-ClassLoaderWrapper分析" class="headerlink" title="二 ClassLoaderWrapper分析"></a>二 ClassLoaderWrapper分析</h1><p>ClassLoaderWrapper是对多个类加载器的包装，使用多个类加载器获取类路径下的资源，部分源码如下</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line">public class ClassLoaderWrapper &#123;</span><br><span class="line"></span><br><span class="line">  ClassLoader defaultClassLoader;</span><br><span class="line">  ClassLoader systemClassLoader;</span><br><span class="line">  </span><br><span class="line">  /**</span><br><span class="line">   * 获取包装的类加载器列表</span><br><span class="line">   */</span><br><span class="line">  ClassLoader[] getClassLoaders(ClassLoader classLoader) &#123;</span><br><span class="line">    return new ClassLoader[]&#123;</span><br><span class="line">        classLoader,</span><br><span class="line">        defaultClassLoader,</span><br><span class="line">        Thread.currentThread().getContextClassLoader(),</span><br><span class="line">        getClass().getClassLoader(),</span><br><span class="line">        systemClassLoader&#125;;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  InputStream getResourceAsStream(String resource, ClassLoader[] classLoader) &#123;</span><br><span class="line">    for (ClassLoader cl : classLoader) &#123;</span><br><span class="line">      if (null != cl) &#123;</span><br><span class="line"></span><br><span class="line">        // try to find the resource as passed</span><br><span class="line">        InputStream returnValue = cl.getResourceAsStream(resource);</span><br><span class="line"></span><br><span class="line">        // now, some class loaders want this leading &quot;/&quot;, so we&apos;ll add it and try again if we didn&apos;t find the resource</span><br><span class="line">        if (null == returnValue) &#123;</span><br><span class="line">          returnValue = cl.getResourceAsStream(&quot;/&quot; + resource);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        if (null != returnValue) &#123;</span><br><span class="line">          return returnValue;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return null;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  URL getResourceAsURL(String resource, ClassLoader[] classLoader) &#123;</span><br><span class="line"></span><br><span class="line">    URL url;</span><br><span class="line"></span><br><span class="line">    for (ClassLoader cl : classLoader) &#123;</span><br><span class="line"></span><br><span class="line">      if (null != cl) &#123;</span><br><span class="line"></span><br><span class="line">        // look for the resource as passed in...</span><br><span class="line">        url = cl.getResource(resource);</span><br><span class="line"></span><br><span class="line">        // ...but some class loaders want this leading &quot;/&quot;, so we&apos;ll add it</span><br><span class="line">        // and try again if we didn&apos;t find the resource</span><br><span class="line">        if (null == url) &#123;</span><br><span class="line">          url = cl.getResource(&quot;/&quot; + resource);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        // &quot;It&apos;s always in the last place I look for it!&quot;</span><br><span class="line">        // ... because only an idiot would keep looking for it after finding it, so stop looking already.</span><br><span class="line">        if (null != url) &#123;</span><br><span class="line">          return url;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // didn&apos;t find it anywhere.</span><br><span class="line">    return null;</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>getResourceAsStream和getResourceAsURL方法循环使用包装的类加载器获取资源，如果获取到则返回，否则返回null。</p>
-
-          
+          Mybatis工具类Resources在获取Mybatis配置文件，Mybatis xml dtd文件中都有使用到，本文对Resources工具类进行源码分析
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2019/06/20/Mybatis资源获取工具类Resources/">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -554,7 +540,7 @@
                 
               
 
-              <time title="创建时间：2019-06-20 09:40:39 / 修改时间：09:41:10" itemprop="dateCreated datePublished" datetime="2019-06-20T09:40:39+08:00">2019-06-20</time>
+              <time title="创建时间：2019-06-20 09:40:39 / 修改时间：10:01:07" itemprop="dateCreated datePublished" datetime="2019-06-20T09:40:39+08:00">2019-06-20</time>
             
 
             
@@ -624,26 +610,14 @@
 
       
         
-          
-            <h1 id="一、从输入流获取Document"><a href="#一、从输入流获取Document" class="headerlink" title="一、从输入流获取Document"></a>一、从输入流获取Document</h1><ol>
-<li><p>获取资源对应的输入流</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">InputStream is = App.class.getResourceAsStream(&quot;/xml/doc.xml&quot;);</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>获取文档构建器工厂DocumentBuilderFactory,该工厂可以设置对文档解析时的一些参数。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();</span><br><span class="line">//解析器是否将xml文档中CDATA节点转换为文本，并附加到相邻的文本节点，默认为false</span><br><span class="line">dbf.setCoalescing(false);</span><br><span class="line">//解析器是否扩展xml文档中实体引用节点，默认为false</span><br><span class="line">dbf.setExpandEntityReferences(false);</span><br><span class="line">//解析器是否忽略xml文档中的注释，默认为false</span><br><span class="line">dbf.setIgnoringComments(false);</span><br><span class="line">//解析器是否提供对命名空间的支持，默认为false</span><br><span class="line">dbf.setNamespaceAware(false);</span><br><span class="line">//解析器是否忽略元素内容中的空白，默认为false</span><br><span class="line">dbf.setIgnoringElementContentWhitespace(false);</span><br><span class="line">//解析器是否对xml文档进行dtd验证,默认为false</span><br><span class="line">dbf.setValidating(false);</span><br><span class="line">//是否处理xi:include标签，默认为false</span><br><span class="line">dbf.setXIncludeAware(false);</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>获取DocumentBuilder</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">DocumentBuilder db = dbf.newDocumentBuilder();</span><br><span class="line">//设置如何查找dtd文件</span><br><span class="line">InputStream dtdInputstream = App.class.getResourceAsStream(&quot;doc.dtd&quot;);</span><br><span class="line">db.setEntityResolver((PublicId, systemId) -&gt; new InputSource(dtdInputstream));</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>从输入流中解析出Document</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Document document = db.parse(is);</span><br></pre></td></tr></table></figure>
-
-</li>
-</ol>
-<h1 id="二、解析Document"><a href="#二、解析Document" class="headerlink" title="二、解析Document"></a>二、解析Document</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">//使用XPath解析Document获取节点</span><br><span class="line">XPathFactory factory = XPathFactory.newInstance();</span><br><span class="line">XPath xpath = factory.newXPath();</span><br><span class="line">Node node = (Node) xpath.evaluate(&quot;/root&quot;, document, XPathConstants.NODE);</span><br><span class="line">//获取node后可以使用node的方法获取子节点或者属性</span><br><span class="line">node.getFirstChild().getAttributes().item(0).getNodeValue();</span><br></pre></td></tr></table></figure>
-
-
-          
+          本文介绍如何使用jdk自带工具对xml进行解析
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2019/06/20/java中对xml解析/">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -741,7 +715,7 @@
                 
               
 
-              <time title="创建时间：2019-06-20 09:36:32 / 修改时间：09:38:05" itemprop="dateCreated datePublished" datetime="2019-06-20T09:36:32+08:00">2019-06-20</time>
+              <time title="创建时间：2019-06-20 09:36:32 / 修改时间：10:02:19" itemprop="dateCreated datePublished" datetime="2019-06-20T09:36:32+08:00">2019-06-20</time>
             
 
             
@@ -811,42 +785,14 @@
 
       
         
-          
-            <h1 id="一-Class-getResource"><a href="#一-Class-getResource" class="headerlink" title="一 Class.getResource"></a>一 Class.getResource</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">String name1 = &quot;/prop/system.properties&quot;;</span><br><span class="line">URL url1 = App.class.getResource(name1);</span><br></pre></td></tr></table></figure>
-
-<h1 id="二-Class-getResourceAsStream"><a href="#二-Class-getResourceAsStream" class="headerlink" title="二 Class.getResourceAsStream"></a>二 Class.getResourceAsStream</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">String name1 = &quot;/prop/system.properties&quot;;</span><br><span class="line">InputStream inputStream1 = App.class.getResourceAsStream(name1);</span><br></pre></td></tr></table></figure>
-
-<h1 id="三-ClassLoader-getResource"><a href="#三-ClassLoader-getResource" class="headerlink" title="三 ClassLoader.getResource"></a>三 ClassLoader.getResource</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">String name2 = &quot;prop/system.properties&quot;;</span><br><span class="line"> URL url2 = App.class.getClassLoader().getResource(name2);</span><br></pre></td></tr></table></figure>
-
-<h1 id="四-ClassLoader-getResourceAsStream"><a href="#四-ClassLoader-getResourceAsStream" class="headerlink" title="四 ClassLoader.getResourceAsStream"></a>四 ClassLoader.getResourceAsStream</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">String name2 = &quot;prop/system.properties&quot;;</span><br><span class="line">InputStream inputStream2 = App.class.getClassLoader().getResourceAsStream(name2);</span><br></pre></td></tr></table></figure>
-
-<h1 id="五-ResourceBundle-getBundle"><a href="#五-ResourceBundle-getBundle" class="headerlink" title="五 ResourceBundle.getBundle"></a>五 ResourceBundle.getBundle</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">String name3 = &quot;prop/system&quot;;</span><br><span class="line">ResourceBundle resourceBundle = ResourceBundle.getBundle(name3);</span><br></pre></td></tr></table></figure>
-
-<p>注意资源名称不包含.properties</p>
-<h1 id="Class、ClassLoader获取资源文件区别"><a href="#Class、ClassLoader获取资源文件区别" class="headerlink" title="Class、ClassLoader获取资源文件区别"></a>Class、ClassLoader获取资源文件区别</h1><ul>
-<li>Class.getResource和Class.getResourceAsStream中，资源名称以”/“开头表示绝对定位，为类路径根目录下的资源文件， 否则资源名称被解析为以Class类的包名为父目录</li>
-<li>ClassLoader.getResource和ClassLoader.getResourceAsStream中，资源名称不能以”/“开头，否则将找不到文件。</li>
-</ul>
-<h1 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h1><p>Class类部分源码如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">public final class Class&lt;T&gt; implements java.io.Serializable,GenericDeclaration,Type,AnnotatedElement &#123;</span><br><span class="line"></span><br><span class="line">    public java.net.URL getResource(String name) &#123;</span><br><span class="line">        name = resolveName(name);</span><br><span class="line">        ClassLoader cl = getClassLoader0();</span><br><span class="line">        if (cl==null) &#123;</span><br><span class="line">            // A system class.</span><br><span class="line">            return ClassLoader.getSystemResource(name);</span><br><span class="line">        &#125;</span><br><span class="line">        return cl.getResource(name);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    public InputStream getResourceAsStream(String name) &#123;</span><br><span class="line">        name = resolveName(name);</span><br><span class="line">        ClassLoader cl = getClassLoader0();</span><br><span class="line">        if (cl==null) &#123;</span><br><span class="line">            // A system class.</span><br><span class="line">            return ClassLoader.getSystemResourceAsStream(name);</span><br><span class="line">        &#125;</span><br><span class="line">        return cl.getResourceAsStream(name);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    private String resolveName(String name) &#123;</span><br><span class="line">        if (name == null) &#123;</span><br><span class="line">            return name;</span><br><span class="line">        &#125;</span><br><span class="line">        if (!name.startsWith(&quot;/&quot;)) &#123;</span><br><span class="line">            Class&lt;?&gt; c = this;</span><br><span class="line">            while (c.isArray()) &#123;</span><br><span class="line">                c = c.getComponentType();</span><br><span class="line">            &#125;</span><br><span class="line">            String baseName = c.getName();</span><br><span class="line">            int index = baseName.lastIndexOf(&apos;.&apos;);</span><br><span class="line">            if (index != -1) &#123;</span><br><span class="line">                name = baseName.substring(0, index).replace(&apos;.&apos;, &apos;/&apos;)</span><br><span class="line">                    +&quot;/&quot;+name;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            name = name.substring(1);</span><br><span class="line">        &#125;</span><br><span class="line">        return name;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    ClassLoader getClassLoader0() &#123; return classLoader; &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>Class的getResource和getResourceAsStream首先调用resolveName方法解析资源名称，然后调用ClassLoader的getResource或getResourceAsStream方法；如果Class类中的域classLoader<br>为null还将调用ClassLoader.getSystemResource或ClassLoader.getSystemResourceAsStream方法获取系统资源。</li>
-<li>Class的resolveName方法解析资源名称时对方法参数进行处理，如果以”/“开头则把开头的”/“截取，否则取包名为父目录和方法参数进行拼接。</li>
-</ul>
-<p>ClassLoader部分源码如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">public abstract class ClassLoader &#123;</span><br><span class="line"></span><br><span class="line">    public URL getResource(String name) &#123;</span><br><span class="line">        URL url;</span><br><span class="line">        if (parent != null) &#123;</span><br><span class="line">            url = parent.getResource(name);</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            url = getBootstrapResource(name);</span><br><span class="line">        &#125;</span><br><span class="line">        if (url == null) &#123;</span><br><span class="line">            url = findResource(name);</span><br><span class="line">        &#125;</span><br><span class="line">        return url;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    public InputStream getResourceAsStream(String name) &#123;</span><br><span class="line">        URL url = getResource(name);</span><br><span class="line">        try &#123;</span><br><span class="line">            return url != null ? url.openStream() : null;</span><br><span class="line">        &#125; catch (IOException e) &#123;</span><br><span class="line">            return null;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>ClassLoader的getResourceAsStream方法调用了getResource方法</li>
-<li>ClassLoader的getResource方法首先尝试使用父类加载器获取资源，未获取到则调用findResource方法查找资源，findResource方法由子类覆盖。</li>
-</ul>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><ul>
-<li>Class.getResource、 Class.getResourceAsStream、ClassLoader.getResourceAsStream最终都调用ClassLoader.getResource</li>
-<li>如果将properties文件转换为java类Properties，可以使用ResourceBundle.getBundle方法。</li>
-</ul>
-
-          
+          java中获取类路径资源文件主要通过Class及ClassLoader提供的方法，最终都调用了ClassLoader中的方法。
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2019/06/20/java中获取类路径资源文件的几种方式/">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
