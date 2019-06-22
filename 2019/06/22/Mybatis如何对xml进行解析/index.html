@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=6.3.0" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico?v=6.3.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.3.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '6.3.0',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="Mybatis对xml的解析能够将xml映射为Configuration类...">
+<meta name="keywords" content="Mybatis,源码">
+<meta property="og:type" content="article">
+<meta property="og:title" content="&#39;Mybatis如何对xml进行解析&#39;">
+<meta property="og:url" content="http://zzhkp.com/2019/06/22/Mybatis如何对xml进行解析/index.html">
+<meta property="og:site_name" content="zzuhkp&#39;s blog">
+<meta property="og:description" content="Mybatis对xml的解析能够将xml映射为Configuration类...">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-06-22T15:10:31.102Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="&#39;Mybatis如何对xml进行解析&#39;">
+<meta name="twitter:description" content="Mybatis对xml的解析能够将xml映射为Configuration类...">
+
+
+
+
+
+
+  <link rel="canonical" href="http://zzhkp.com/2019/06/22/Mybatis如何对xml进行解析/">
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>'Mybatis如何对xml进行解析' | zzuhkp's blog</title>
+  
+
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?bd8ef0371e033f4f1bef4bf84d40dce7";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">zzuhkp's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">zzuhkp's blog</p>
+      
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+    <a href="/about/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://zzhkp.com/2019/06/22/Mybatis如何对xml进行解析/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zzuhkp">
+      <meta itemprop="description" content="礼物不需要太贵，只要香榭的落叶">
+      <meta itemprop="image" content="http://q1.qlogo.cn/g?b=qq&nk=291732073&s=140">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zzuhkp's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">'Mybatis如何对xml进行解析'
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-06-22 23:07:39 / 修改时间：23:10:31" itemprop="dateCreated datePublished" datetime="2019-06-22T23:07:39+08:00">2019-06-22</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Mybatis源码阅读/" itemprop="url" rel="index"><span itemprop="name">Mybatis源码阅读</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/06/22/Mybatis如何对xml进行解析/#comments" itemprop="discussionUrl">
+                
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/06/22/Mybatis如何对xml进行解析/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+		  
+		  
+          
+
+          
+              <div class="post-description">Mybatis对xml的解析能够将xml映射为Configuration类...</div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="一、概述"><a href="#一、概述" class="headerlink" title="一、概述"></a>一、概述</h1><p>Mybatis对Xml的解析主要使用org.apache.ibatis.parsing包中的类，主要分为<strong>节点解析和节点中变量的解析</strong>，该包中有以下几个类：</p>
+<ul>
+<li>GenericTokenParser：查找文本内容中的变量，并使用该类包含的TokenHandler引用解析出变量值。</li>
+<li>ParsingException：未使用。</li>
+<li>PropertyParser：将静态内部类VariableTokenHandler引用传递给GenericTokenParser解析出xml节点属性值中的变量。</li>
+<li>TokenHandler：描述如何处理变量的接口，由PropertyParser内部静态类VariableTokenHandler实现。</li>
+<li>XNode：使用XPathParser解析节点的内容、使用PropertyParser解析xml节点属性中变量的值。</li>
+<li>XPathParser：提供从InputStream中创建Document能力，并能根据表达式对节点进行解析。</li>
+</ul>
+<h1 id="二、节点解析"><a href="#二、节点解析" class="headerlink" title="二、节点解析"></a>二、节点解析</h1><p>Mybatis使用XPathParser类对节点进行解析，该类还提供了从输入流中创建Document的能力。</p>
+<h2 id="2-1-Document创建"><a href="#2-1-Document创建" class="headerlink" title="2.1 Document创建"></a>2.1 Document创建</h2><p>XPathParser部分代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line">public class XPathParser &#123;</span><br><span class="line"></span><br><span class="line">  //xml文本对应的文档</span><br><span class="line">  private final Document document;</span><br><span class="line">  //是否进行dtd校验</span><br><span class="line">  private boolean validation;</span><br><span class="line">  //该类定义了如何解析dtd</span><br><span class="line">  private EntityResolver entityResolver;</span><br><span class="line">  //xml中可能使用到的变量</span><br><span class="line">  private Properties variables;</span><br><span class="line">  //使用XPath解析节点</span><br><span class="line">  private XPath xpath;</span><br><span class="line">  </span><br><span class="line">  public XPathParser(InputStream inputStream, boolean validation, Properties variables, EntityResolver entityResolver) &#123;</span><br><span class="line">    commonConstructor(validation, variables, entityResolver);</span><br><span class="line">    this.document = createDocument(new InputSource(inputStream));</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  public XPathParser(Reader reader, boolean validation, Properties variables, EntityResolver entityResolver) &#123;</span><br><span class="line">    commonConstructor(validation, variables, entityResolver);</span><br><span class="line">    this.document = createDocument(new InputSource(reader));</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  public XPathParser(String xml, boolean validation, Properties variables, EntityResolver entityResolver) &#123;</span><br><span class="line">    commonConstructor(validation, variables, entityResolver);</span><br><span class="line">    this.document = createDocument(new InputSource(new StringReader(xml)));</span><br><span class="line">  &#125;  </span><br><span class="line"></span><br><span class="line">  private void commonConstructor(boolean validation, Properties variables, EntityResolver entityResolver) &#123;</span><br><span class="line">    this.validation = validation;</span><br><span class="line">    this.entityResolver = entityResolver;</span><br><span class="line">    this.variables = variables;</span><br><span class="line">    XPathFactory factory = XPathFactory.newInstance();</span><br><span class="line">    this.xpath = factory.newXPath();</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  private Document createDocument(InputSource inputSource) &#123;</span><br><span class="line">    // important: this must only be called AFTER common constructor</span><br><span class="line">    try &#123;</span><br><span class="line">      DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();</span><br><span class="line">      factory.setValidating(validation);</span><br><span class="line"></span><br><span class="line">      factory.setNamespaceAware(false);</span><br><span class="line">      factory.setIgnoringComments(true);</span><br><span class="line">      factory.setIgnoringElementContentWhitespace(false);</span><br><span class="line">      factory.setCoalescing(false);</span><br><span class="line">      factory.setExpandEntityReferences(true);</span><br><span class="line"></span><br><span class="line">      DocumentBuilder builder = factory.newDocumentBuilder();</span><br><span class="line">      builder.setEntityResolver(entityResolver);</span><br><span class="line">      builder.setErrorHandler(new ErrorHandler() &#123;</span><br><span class="line">        @Override</span><br><span class="line">        public void error(SAXParseException exception) throws SAXException &#123;</span><br><span class="line">          throw exception;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        @Override</span><br><span class="line">        public void fatalError(SAXParseException exception) throws SAXException &#123;</span><br><span class="line">          throw exception;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        @Override</span><br><span class="line">        public void warning(SAXParseException exception) throws SAXException &#123;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;);</span><br><span class="line">      return builder.parse(inputSource);</span><br><span class="line">    &#125; catch (Exception e) &#123;</span><br><span class="line">      throw new BuilderException(&quot;Error creating document instance.  Cause: &quot; + e, e);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到XPathParser构造方法的代码基本一致，最终都调用了commonConstructor和createDocument方法。</p>
+<ul>
+<li>commonConstructor方法主要对成员变量进行初始化。</li>
+<li>createDocument方法使用JDK自带的类创建Document对象。</li>
+</ul>
+<h2 id="2-2-节点解析"><a href="#2-2-节点解析" class="headerlink" title="2.2 节点解析"></a>2.2 节点解析</h2><p>Mybatis对Node节点的解析主要使用了XPathParser的evalNode方法，该方法使用了XPath表达式对节点解析。XPathParser类对Node解析的部分代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line">public class XPathParser &#123;</span><br><span class="line"></span><br><span class="line">  /**</span><br><span class="line">   * 解析表达式的通用方法</span><br><span class="line">   * @param expression</span><br><span class="line">   * @param root</span><br><span class="line">   * @param returnType</span><br><span class="line">   * @return</span><br><span class="line">   */</span><br><span class="line">  private Object evaluate(String expression, Object root, QName returnType) &#123;</span><br><span class="line">    try &#123;</span><br><span class="line">      return xpath.evaluate(expression, root, returnType);</span><br><span class="line">    &#125; catch (Exception e) &#123;</span><br><span class="line">      throw new BuilderException(&quot;Error evaluating XPath.  Cause: &quot; + e, e);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  /**</span><br><span class="line">   * 将表达式解析为节点</span><br><span class="line">   * @param root</span><br><span class="line">   * @param expression</span><br><span class="line">   * @return</span><br><span class="line">   */</span><br><span class="line">  public XNode evalNode(Object root, String expression) &#123;</span><br><span class="line">    Node node = (Node) evaluate(expression, root, XPathConstants.NODE);</span><br><span class="line">    if (node == null) &#123;</span><br><span class="line">      return null;</span><br><span class="line">    &#125;</span><br><span class="line">    return new XNode(this, node, variables);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  /**</span><br><span class="line">   * 将表达式解析为字符串</span><br><span class="line">   *</span><br><span class="line">   * @param root</span><br><span class="line">   * @param expression</span><br><span class="line">   * @return</span><br><span class="line">   */</span><br><span class="line">  public String evalString(Object root, String expression) &#123;</span><br><span class="line">    String result = (String) evaluate(expression, root, XPathConstants.STRING);</span><br><span class="line">    result = PropertyParser.parse(result, variables);</span><br><span class="line">    return result;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  /**</span><br><span class="line">   * 将表达式解析为整型</span><br><span class="line">   *</span><br><span class="line">   * @param root</span><br><span class="line">   * @param expression</span><br><span class="line">   * @return</span><br><span class="line">   */</span><br><span class="line">  public Integer evalInteger(Object root, String expression) &#123;</span><br><span class="line">    return Integer.valueOf(evalString(root, expression));</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到XPathParser提供通用的evaluate方法对表达式进行解析，并提供了特定的其他方法用于解析出节点、字符串、整型变量等。</p>
+<ul>
+<li>解析出的节点将被包装为XNode类，XNode类中对节点内容的解析使用XPathParser提供的方法。</li>
+<li>解析出的字符串将PropertyParser.parse方法解析出字符串中的变量值。</li>
+</ul>
+<h1 id="三、变量解析"><a href="#三、变量解析" class="headerlink" title="三、变量解析"></a>三、变量解析</h1><p>XPathParser将XPath表达式解析为字符串时将调用PropertyParser.parse方法解析出字符串中的变量对应的值，例如：”jdbc:${url}/test”,将解析出变量url的值并替换${url}。</p>
+<p>PropertyParser部分代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br></pre></td><td class="code"><pre><span class="line">public class PropertyParser &#123;</span><br><span class="line"></span><br><span class="line">  private static final String KEY_PREFIX = &quot;org.apache.ibatis.parsing.PropertyParser.&quot;;</span><br><span class="line"></span><br><span class="line">  /**</span><br><span class="line">   * 是否开启默认值的键</span><br><span class="line">   * 3.4.2版本开始</span><br><span class="line">   */</span><br><span class="line">  public static final String KEY_ENABLE_DEFAULT_VALUE = KEY_PREFIX + &quot;enable-default-value&quot;;</span><br><span class="line"></span><br><span class="line">  /**</span><br><span class="line">   * 变量名和默认值的分隔符的键</span><br><span class="line">   * 3.4.2版本开始</span><br><span class="line">   */</span><br><span class="line">  public static final String KEY_DEFAULT_VALUE_SEPARATOR = KEY_PREFIX + &quot;default-value-separator&quot;;</span><br><span class="line"></span><br><span class="line">  /**</span><br><span class="line">   * 默认不开启变量的默认值</span><br><span class="line">   */</span><br><span class="line">  private static final String ENABLE_DEFAULT_VALUE = &quot;false&quot;;</span><br><span class="line"></span><br><span class="line">  /**</span><br><span class="line">   * 默认分隔符为:</span><br><span class="line">   */</span><br><span class="line">  private static final String DEFAULT_VALUE_SEPARATOR = &quot;:&quot;;</span><br><span class="line"></span><br><span class="line">  private PropertyParser() &#123;</span><br><span class="line">    // Prevent Instantiation</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  public static String parse(String string, Properties variables) &#123;</span><br><span class="line">    VariableTokenHandler handler = new VariableTokenHandler(variables);</span><br><span class="line">    GenericTokenParser parser = new GenericTokenParser(&quot;$&#123;&quot;, &quot;&#125;&quot;, handler);</span><br><span class="line">    return parser.parse(string);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  private static class VariableTokenHandler implements TokenHandler &#123;</span><br><span class="line">    /**</span><br><span class="line">     * xml中properties标签设置的变量</span><br><span class="line">     */</span><br><span class="line">    private final Properties variables;</span><br><span class="line">    /**</span><br><span class="line">     * 是否开启默认值</span><br><span class="line">     */</span><br><span class="line">    private final boolean enableDefaultValue;</span><br><span class="line">    /**</span><br><span class="line">     * 变量名和默认值的分隔符</span><br><span class="line">     */</span><br><span class="line">    private final String defaultValueSeparator;</span><br><span class="line"></span><br><span class="line">    private VariableTokenHandler(Properties variables) &#123;</span><br><span class="line">      this.variables = variables;</span><br><span class="line">      this.enableDefaultValue = Boolean.parseBoolean(getPropertyValue(KEY_ENABLE_DEFAULT_VALUE, ENABLE_DEFAULT_VALUE));</span><br><span class="line">      this.defaultValueSeparator = getPropertyValue(KEY_DEFAULT_VALUE_SEPARATOR, DEFAULT_VALUE_SEPARATOR);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private String getPropertyValue(String key, String defaultValue) &#123;</span><br><span class="line">      return (variables == null) ? defaultValue : variables.getProperty(key, defaultValue);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public String handleToken(String content) &#123;</span><br><span class="line">      if (variables != null) &#123;</span><br><span class="line">        //变量不为空时处理变量名</span><br><span class="line">        String key = content;</span><br><span class="line">        if (enableDefaultValue) &#123;</span><br><span class="line">          final int separatorIndex = content.indexOf(defaultValueSeparator);</span><br><span class="line">          String defaultValue = null;</span><br><span class="line">          if (separatorIndex &gt;= 0) &#123;</span><br><span class="line">            //利用分隔符将变量名和默认值分开</span><br><span class="line">            key = content.substring(0, separatorIndex);</span><br><span class="line">            defaultValue = content.substring(separatorIndex + defaultValueSeparator.length());</span><br><span class="line">          &#125;</span><br><span class="line">          if (defaultValue != null) &#123;</span><br><span class="line">            //从设置的变量中解析出xml文本内容中的变量名对应的变量值</span><br><span class="line">            return variables.getProperty(key, defaultValue);</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        if (variables.containsKey(key)) &#123;</span><br><span class="line">          return variables.getProperty(key);</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      return &quot;$&#123;&quot; + content + &quot;&#125;&quot;;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>阅读PropertyParser源码可以发现，mybatis从3.4.2开始支持为变量设置默认值，并且默认值特定默认是关闭的。如果需要开启可以在xml配置文件properties节点中设置。</li>
+<li>PropertyParser使用内部类VariableTokenHandler处理变量名和默认值，从properties中获取变量名对应的值。</li>
+<li>PropertyParser.parse方法调用GenericTokenParser类中parse方法从文本中解析出变量名，并使用VariableTokenHandler提供的方法从变量名中解析出变量的值。</li>
+</ul>
+<p>GenericTokenParser源码如下，并已经做出了注释。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br></pre></td><td class="code"><pre><span class="line">public class GenericTokenParser &#123;</span><br><span class="line"></span><br><span class="line">  /**</span><br><span class="line">   * 变量开始标识</span><br><span class="line">   */</span><br><span class="line">  private final String openToken;</span><br><span class="line">  /**</span><br><span class="line">   * 变量结束标识</span><br><span class="line">   */</span><br><span class="line">  private final String closeToken;</span><br><span class="line">  /**</span><br><span class="line">   * 变量处理器</span><br><span class="line">   */</span><br><span class="line">  private final TokenHandler handler;</span><br><span class="line"></span><br><span class="line">  public GenericTokenParser(String openToken, String closeToken, TokenHandler handler) &#123;</span><br><span class="line">    this.openToken = openToken;</span><br><span class="line">    this.closeToken = closeToken;</span><br><span class="line">    this.handler = handler;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  /**</span><br><span class="line">   * 将文本中的变量替换为对应的变量值</span><br><span class="line">   * 以openToken为“$&#123;”和closeToken为“&#125;”</span><br><span class="line">   *</span><br><span class="line">   * @param text</span><br><span class="line">   * @return</span><br><span class="line">   */</span><br><span class="line">  public String parse(String text) &#123;</span><br><span class="line">    //文本为空之间返回</span><br><span class="line">    if (text == null || text.isEmpty()) &#123;</span><br><span class="line">      return &quot;&quot;;</span><br><span class="line">    &#125;</span><br><span class="line">    // 搜索变量左侧符号openToken在文本内的位置</span><br><span class="line">    int start = text.indexOf(openToken);</span><br><span class="line">    //找不到openToken直接返回</span><br><span class="line">    if (start == -1) &#123;</span><br><span class="line">      return text;</span><br><span class="line">    &#125;</span><br><span class="line">    //将文本转换为字符数组，便于向StringBuilder中拼接非变量值和变量值</span><br><span class="line">    char[] src = text.toCharArray();</span><br><span class="line">    //未处理的字符在字符数组str的偏移量</span><br><span class="line">    int offset = 0;</span><br><span class="line">    //最终解析的值</span><br><span class="line">    final StringBuilder builder = new StringBuilder();</span><br><span class="line">    //变量名称，根据名称使用TokenHandler从设置的属性中查找值</span><br><span class="line">    StringBuilder expression = null;</span><br><span class="line">    //只要在未处理的字符数组中还存在openToken的字符就一直处理</span><br><span class="line">    while (start &gt; -1) &#123;</span><br><span class="line">      //openToken前存在转义字符“\”,处理转义字符</span><br><span class="line">      if (start &gt; 0 &amp;&amp; src[start - 1] == &apos;\\&apos;) &#123;</span><br><span class="line">        //存在转义字符则拼接非变量值和openToken</span><br><span class="line">        builder.append(src, offset, start - offset - 1).append(openToken);</span><br><span class="line">        //计算偏移量,偏移量为$&#123;在text的索引位置加上“$&#123;”的长度</span><br><span class="line">        offset = start + openToken.length();</span><br><span class="line">      &#125; else &#123;</span><br><span class="line">        //找到openToken，并且openToken前不存在转义字符</span><br><span class="line">        //初始化变量名</span><br><span class="line">        if (expression == null) &#123;</span><br><span class="line">          expression = new StringBuilder();</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">          expression.setLength(0);</span><br><span class="line">        &#125;</span><br><span class="line">        //最终解析的值拼接openToken左侧的非变量内容</span><br><span class="line">        builder.append(src, offset, start - offset);</span><br><span class="line">        //重新计算偏移量</span><br><span class="line">        offset = start + openToken.length();</span><br><span class="line">        //从偏移量开始在文本中搜索closeToken的位置</span><br><span class="line">        int end = text.indexOf(closeToken, offset);</span><br><span class="line">        //当closeToken存在时</span><br><span class="line">        while (end &gt; -1) &#123;</span><br><span class="line">          //处理closeToken前的转义字符“\”</span><br><span class="line">          if (end &gt; offset &amp;&amp; src[end - 1] == &apos;\\&apos;) &#123;</span><br><span class="line">            //变量名拼接非变量内容和closeToken,$&#123;abc\&#125;def&#125;,即abc\&#125;</span><br><span class="line">            expression.append(src, offset, end - offset - 1).append(closeToken);</span><br><span class="line">            //重新计算偏移量</span><br><span class="line">            offset = end + closeToken.length();</span><br><span class="line">            //从偏移量开始，在文本中重新计算CloseToken的索引位置</span><br><span class="line">            end = text.indexOf(closeToken, offset);</span><br><span class="line">          &#125; else &#123;</span><br><span class="line">            //变量名拼接偏移量开始到closeToken位置之间的内容,即$&#123;abc\&#125;def&#125;中的def或$&#123;abc&#125;中的abc</span><br><span class="line">            expression.append(src, offset, end - offset);</span><br><span class="line">            //重新计算偏移量</span><br><span class="line">            offset = end + closeToken.length();</span><br><span class="line">            break;</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        //找不到closeToken</span><br><span class="line">        if (end == -1) &#123;</span><br><span class="line">          //拼接从$&#123;后面所有的内容</span><br><span class="line">          builder.append(src, start, src.length - start);</span><br><span class="line">          //偏移量为文本长度值</span><br><span class="line">          offset = src.length;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">          //找到closeToken,获取处理好的变量名对应的值拼接到最终解析的值中，handleToken从设置的Properties中获取值</span><br><span class="line">          builder.append(handler.handleToken(expression.toString()));</span><br><span class="line">          //重新计算偏移量</span><br><span class="line">          offset = end + closeToken.length();</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      //重新计算openTokend的索引位置</span><br><span class="line">      start = text.indexOf(openToken, offset);</span><br><span class="line">    &#125;</span><br><span class="line">    //处理最后closeToken后面的内容</span><br><span class="line">    if (offset &lt; src.length) &#123;</span><br><span class="line">      //最终解析的值中拼接closeToken后面的内容</span><br><span class="line">      builder.append(src, offset, src.length - offset);</span><br><span class="line">    &#125;</span><br><span class="line">    return builder.toString();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>GenericTokenParser的parse方法能够在文本中查找多个变量，并对转义字符进行了处理。该方法最终调用TokenHandler引用，即VariableTokenHandler类的handleToken方法从变量名解析出变量值。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>通过以上的介绍，Mybatis已经能够完成对xml的解析工作。对Xml的解析能够用于对Mybatis配置文件的解析，将配置文件映射为Configuration类。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Mybatis/" rel="tag"><i class="fa fa-tag"></i> Mybatis</a>
+          
+            <a href="/tags/源码/" rel="tag"><i class="fa fa-tag"></i> 源码</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/06/20/Mybatis资源获取工具类Resources/" rel="next" title="Mybatis资源获取工具类Resources">
+                <i class="fa fa-chevron-left"></i> Mybatis资源获取工具类Resources
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="http://q1.qlogo.cn/g?b=qq&nk=291732073&s=140" alt="zzuhkp">
+            
+              <p class="site-author-name" itemprop="name">zzuhkp</p>
+              <p class="site-description motion-element" itemprop="description">礼物不需要太贵，只要香榭的落叶</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">6</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">3</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">8</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一、概述"><span class="nav-number">1.</span> <span class="nav-text">一、概述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二、节点解析"><span class="nav-number">2.</span> <span class="nav-text">二、节点解析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-Document创建"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 Document创建</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-节点解析"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 节点解析</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#三、变量解析"><span class="nav-number">3.</span> <span class="nav-text">三、变量解析</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zzuhkp</span>
+
+  
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动 v3.9.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Mist</a> v6.3.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.3.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.3.0"></script>
+
+
+
+  
+
+  
+    <script id="dsq-count-scr" src="https://zzuhkp.disqus.com/count.js" async></script>
+  
+
+  
+    <script type="text/javascript">
+      var disqus_config = function () {
+        this.page.url = 'http://zzhkp.com/2019/06/22/Mybatis如何对xml进行解析/';
+        this.page.identifier = '2019/06/22/Mybatis如何对xml进行解析/';
+        this.page.title = '\'Mybatis如何对xml进行解析\'';
+        };
+      function loadComments () {
+        var d = document, s = d.createElement('script');
+        s.src = 'https://zzuhkp.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      }
+      
+        loadComments();
+      
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  
+  
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(function (item) {
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'SPcuA34NIWi8vJgruDiDiFlS-gzGzoHsz',
+        appKey: 'sCkvUF7tE2nnOXkWTxsjPRek',
+        placeholder: 'ヾﾉ≧∀≦)o 来呀！快活呀！~',
+        avatar:'mm',
+        meta:guest,
+        pageSize:'10' || 10,
+        visitor: false
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+  
+  
+	<script type="text/javascript" color="0,0,255" opacity="0.3" zindex="-2" count="50" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+	
+</body>
+</html>
