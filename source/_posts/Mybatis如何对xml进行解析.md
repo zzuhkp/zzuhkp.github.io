@@ -18,6 +18,10 @@ Mybatis对Xml的解析主要使用org.apache.ibatis.parsing包中的类，主要
 - XNode：使用XPathParser解析节点的内容、使用PropertyParser解析xml节点属性中变量的值。
 - XPathParser：提供从InputStream中创建Document能力，并能根据表达式对节点进行解析。
 
+流程图如下：
+
+{% asset_img 'Mybatis XML解析序列图.jpg' Mybatis XML解析序列图 %}
+
 # 二、节点解析
 Mybatis使用XPathParser类对节点进行解析，该类还提供了从输入流中创建Document的能力。
 
