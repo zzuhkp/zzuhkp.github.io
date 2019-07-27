@@ -108,25 +108,29 @@
 
 
 
-  <meta name="description" content="本文介绍如何使用jdk自带工具对xml进行解析。">
-<meta name="keywords" content="java,xml">
+  <meta name="description" content="学习linux可以在windows中使用VMware安装CentOS操作系统，使用Xshell远程访问VMware中的CentOS操作系统，由于每次重启CentOS IP都可能变化，因此需要对VMware中 CentOS设置静态IP。">
+<meta name="keywords" content="linux,centos,VMware">
 <meta property="og:type" content="article">
-<meta property="og:title" content="java中对xml解析">
-<meta property="og:url" content="http://zzhkp.com/2019/06/20/java中对xml解析/index.html">
+<meta property="og:title" content="VMware CentOS7 静态IP配置">
+<meta property="og:url" content="http://zzhkp.com/2019/07/27/VMware-CentOS7-静态IP配置/index.html">
 <meta property="og:site_name" content="zzuhkp&#39;s blog">
-<meta property="og:description" content="本文介绍如何使用jdk自带工具对xml进行解析。">
+<meta property="og:description" content="学习linux可以在windows中使用VMware安装CentOS操作系统，使用Xshell远程访问VMware中的CentOS操作系统，由于每次重启CentOS IP都可能变化，因此需要对VMware中 CentOS设置静态IP。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-06-20T02:15:27.660Z">
+<meta property="og:image" content="http://zzhkp.com/2019/07/27/VMware-CentOS7-静态IP配置/选择虚拟网络编辑器.png">
+<meta property="og:image" content="http://zzhkp.com/2019/07/27/VMware-CentOS7-静态IP配置/选择NAT模式.png">
+<meta property="og:image" content="http://zzhkp.com/2019/07/27/VMware-CentOS7-静态IP配置/查看NAT设置.png">
+<meta property="og:updated_time" content="2019-07-27T11:31:42.093Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="java中对xml解析">
-<meta name="twitter:description" content="本文介绍如何使用jdk自带工具对xml进行解析。">
+<meta name="twitter:title" content="VMware CentOS7 静态IP配置">
+<meta name="twitter:description" content="学习linux可以在windows中使用VMware安装CentOS操作系统，使用Xshell远程访问VMware中的CentOS操作系统，由于每次重启CentOS IP都可能变化，因此需要对VMware中 CentOS设置静态IP。">
+<meta name="twitter:image" content="http://zzhkp.com/2019/07/27/VMware-CentOS7-静态IP配置/选择虚拟网络编辑器.png">
 
 
 
 
 
 
-  <link rel="canonical" href="http://zzhkp.com/2019/06/20/java中对xml解析/">
+  <link rel="canonical" href="http://zzhkp.com/2019/07/27/VMware-CentOS7-静态IP配置/">
 
 
 
@@ -136,7 +140,7 @@
   };
 </script>
 
-  <title>java中对xml解析 | zzuhkp's blog</title>
+  <title>VMware CentOS7 静态IP配置 | zzuhkp's blog</title>
   
 
 
@@ -319,7 +323,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://zzhkp.com/2019/06/20/java中对xml解析/">
+    <link itemprop="mainEntityOfPage" href="http://zzhkp.com/2019/07/27/VMware-CentOS7-静态IP配置/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="zzuhkp">
@@ -336,7 +340,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">java中对xml解析
+          <h1 class="post-title" itemprop="name headline">VMware CentOS7 静态IP配置
               
             
           </h1>
@@ -361,7 +365,7 @@
                 
               
 
-              <time title="创建时间：2019-06-20 09:40:39 / 修改时间：10:15:27" itemprop="dateCreated datePublished" datetime="2019-06-20T09:40:39+08:00">2019-06-20</time>
+              <time title="创建时间：2019-07-27 19:09:03 / 修改时间：19:31:42" itemprop="dateCreated datePublished" datetime="2019-07-27T19:09:03+08:00">2019-07-27</time>
             
 
             
@@ -383,7 +387,7 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/java基础知识/" itemprop="url" rel="index"><span itemprop="name">java基础知识</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a></span>
 
                 
                 
@@ -398,9 +402,9 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2019/06/20/java中对xml解析/#comments" itemprop="discussionUrl">
+                <a href="/2019/07/27/VMware-CentOS7-静态IP配置/#comments" itemprop="discussionUrl">
                 
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/06/20/java中对xml解析/" itemprop="commentCount"></span>
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/07/27/VMware-CentOS7-静态IP配置/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -416,7 +420,7 @@
           
 
           
-              <div class="post-description">本文介绍如何使用jdk自带工具对xml进行解析。</div>
+              <div class="post-description">学习linux可以在windows中使用VMware安装CentOS操作系统，使用Xshell远程访问VMware中的CentOS操作系统，由于每次重启CentOS IP都可能变化，因此需要对VMware中 CentOS设置静态IP。</div>
           
 
         </div>
@@ -432,23 +436,33 @@
       
 
       
-        <h1 id="一、从输入流获取Document"><a href="#一、从输入流获取Document" class="headerlink" title="一、从输入流获取Document"></a>一、从输入流获取Document</h1><ol>
-<li><p>获取资源对应的输入流</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">InputStream is = App.class.getResourceAsStream(&quot;/xml/doc.xml&quot;);</span><br></pre></td></tr></table></figure>
+        <p>1.点击左上角编辑选择虚拟网络编辑器  </p>
+<img src="/2019/07/27/VMware-CentOS7-静态IP配置/选择虚拟网络编辑器.png" title="选择虚拟网络编辑器">
+
+<ol start="2">
+<li><p>选择NAT模式，点击更改设置</p>
+<img src="/2019/07/27/VMware-CentOS7-静态IP配置/选择NAT模式.png" title="选择NAT模式">
 </li>
-<li><p>获取文档构建器工厂DocumentBuilderFactory,该工厂可以设置对文档解析时的一些参数。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();</span><br><span class="line">//解析器是否将xml文档中CDATA节点转换为文本，并附加到相邻的文本节点，默认为false</span><br><span class="line">dbf.setCoalescing(false);</span><br><span class="line">//解析器是否扩展xml文档中实体引用节点，默认为false</span><br><span class="line">dbf.setExpandEntityReferences(false);</span><br><span class="line">//解析器是否忽略xml文档中的注释，默认为false</span><br><span class="line">dbf.setIgnoringComments(false);</span><br><span class="line">//解析器是否提供对命名空间的支持，默认为false</span><br><span class="line">dbf.setNamespaceAware(false);</span><br><span class="line">//解析器是否忽略元素内容中的空白，默认为false</span><br><span class="line">dbf.setIgnoringElementContentWhitespace(false);</span><br><span class="line">//解析器是否对xml文档进行dtd验证,默认为false</span><br><span class="line">dbf.setValidating(false);</span><br><span class="line">//是否处理xi:include标签，默认为false</span><br><span class="line">dbf.setXIncludeAware(false);</span><br></pre></td></tr></table></figure>
+<li><p>选择NAT模式，取消使用本地DHCP服务将IP地址分配给虚拟机(可选)，点击NAT设置查看子网IP、子网掩码、网关IP,</p>
+<img src="/2019/07/27/VMware-CentOS7-静态IP配置/查看NAT设置.png" title="查看NAT设置">
 </li>
-<li><p>获取DocumentBuilder</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">DocumentBuilder db = dbf.newDocumentBuilder();</span><br><span class="line">//设置如何查找dtd文件</span><br><span class="line">InputStream dtdInputstream = App.class.getResourceAsStream(&quot;doc.dtd&quot;);</span><br><span class="line">db.setEntityResolver((PublicId, systemId) -&gt; new InputSource(dtdInputstream));</span><br></pre></td></tr></table></figure>
+<li><p>查看网卡信息</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[root@centos7 ~]# ip addr</span><br><span class="line">1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000</span><br><span class="line">    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00</span><br><span class="line">    inet 127.0.0.1/8 scope host lo</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">    inet6 ::1/128 scope host </span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">2: ens33: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc pfifo_fast state UP group default qlen 1000</span><br><span class="line">    link/ether 00:0c:29:59:3e:28 brd ff:ff:ff:ff:ff:ff</span><br><span class="line">    inet 192.168.189.128/24 brd 192.168.189.255 scope global noprefixroute dynamic ens33</span><br><span class="line">       valid_lft 1650sec preferred_lft 1650sec</span><br><span class="line">    inet6 fe80::e1e8:75df:33ef:8461/64 scope link noprefixroute </span><br><span class="line">       valid_lft forever preferred_lft forever</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>从输入流中解析出Document</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Document document = db.parse(is);</span><br></pre></td></tr></table></figure>
+<li><p>编辑网卡信息<br>网卡名称为ens33,该网卡的配置文件在/etc/sysconfig/network-scripts/ifcfg-ens33<br>主要修改BOOTPROTO参数的值为static,添加IPADDR、GATEWAY、NETMASK、DNS1四个参数。<br>IPADDR、GATEWAY、NETMASK应和截图中⑧保持一致。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">[root@centos7 ~]# vi /etc/sysconfig/network-scripts/ifcfg-ens33 </span><br><span class="line">[root@centos7 ~]# cat /etc/sysconfig/network-scripts/ifcfg-ens33</span><br><span class="line">TYPE=&quot;Ethernet&quot;</span><br><span class="line">PROXY_METHOD=&quot;none&quot;</span><br><span class="line">BROWSER_ONLY=&quot;no&quot;</span><br><span class="line">BOOTPROTO=&quot;static&quot;      #使用静态IP地址,默认为dhcp</span><br><span class="line">IPADDR=192.168.189.131  #IP地址</span><br><span class="line">GATEWAY=192.168.189.2   #网关地址</span><br><span class="line">NETMASK=255.255.255.0   #子网掩码</span><br><span class="line">DNS1=114.114.114.114    #DNS地址</span><br><span class="line">DEFROUTE=&quot;yes&quot;</span><br><span class="line">IPV4_FAILURE_FATAL=&quot;no&quot;</span><br><span class="line">IPV6INIT=&quot;yes&quot;</span><br><span class="line">IPV6_AUTOCONF=&quot;yes&quot;</span><br><span class="line">IPV6_DEFROUTE=&quot;yes&quot;</span><br><span class="line">IPV6_FAILURE_FATAL=&quot;no&quot;</span><br><span class="line">IPV6_ADDR_GEN_MODE=&quot;stable-privacy&quot;</span><br><span class="line">NAME=&quot;ens33&quot;</span><br><span class="line">UUID=&quot;f49c4e07-52c1-45bc-a58c-e75894e1638c&quot;</span><br><span class="line">DEVICE=&quot;ens33&quot;</span><br><span class="line">ONBOOT=&quot;yes&quot;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>重启网络服务<br>使用service network restart重启网络服务，由于使用远程连接虚拟机内CentOS，因此连接被断开。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@centos7 ~]# service network restart</span><br><span class="line">Restarting network (via systemctl):  </span><br><span class="line">Socket error Event: 32 Error: 10053.</span><br><span class="line">Connection closing...Socket close.</span><br><span class="line"></span><br><span class="line">Connection closed by foreign host.</span><br><span class="line"></span><br><span class="line">Disconnected from remote host(localhost_CentOS7) at 18:35:03.</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>检查网络是否配置生效<br>再次查看网卡信息如下,发现IP已经发生变化</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[root@centos7 ~]# ip addr</span><br><span class="line">1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000</span><br><span class="line">    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00</span><br><span class="line">    inet 127.0.0.1/8 scope host lo</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">    inet6 ::1/128 scope host </span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">2: ens33: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc pfifo_fast state UP group default qlen 1000</span><br><span class="line">    link/ether 00:0c:29:59:3e:28 brd ff:ff:ff:ff:ff:ff</span><br><span class="line">    inet 192.168.189.131/24 brd 192.168.189.255 scope global noprefixroute ens33</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">    inet6 fe80::e1e8:75df:33ef:8461/64 scope link noprefixroute </span><br><span class="line">       valid_lft forever preferred_lft forever</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>检查网络是否畅通<br>使用ping命令检查是否能够访问 baidu.com ,有数据返回，说明配置无误。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@centos7 ~]# ping baidu.com</span><br><span class="line">PING baidu.com (39.156.69.79) 56(84) bytes of data.</span><br><span class="line">64 bytes from 39.156.69.79 (39.156.69.79): icmp_seq=1 ttl=128 time=61.5 ms</span><br><span class="line">64 bytes from 39.156.69.79 (39.156.69.79): icmp_seq=2 ttl=128 time=61.5 ms</span><br><span class="line">^C</span><br><span class="line">--- baidu.com ping statistics ---</span><br><span class="line">2 packets transmitted, 2 received, 0% packet loss, time 1001ms</span><br><span class="line">rtt min/avg/max/mdev = 61.564/61.573/61.582/0.009 ms</span><br></pre></td></tr></table></figure>
 
 </li>
 </ol>
-<h1 id="二、解析Document"><a href="#二、解析Document" class="headerlink" title="二、解析Document"></a>二、解析Document</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">//使用XPath解析Document获取节点</span><br><span class="line">XPathFactory factory = XPathFactory.newInstance();</span><br><span class="line">XPath xpath = factory.newXPath();</span><br><span class="line">Node node = (Node) xpath.evaluate(&quot;/root&quot;, document, XPathConstants.NODE);</span><br><span class="line">//获取node后可以使用node的方法获取子节点或者属性</span><br><span class="line">node.getFirstChild().getAttributes().item(0).getNodeValue();</span><br></pre></td></tr></table></figure>
-
 
       
     </div>
@@ -469,9 +483,11 @@
       
         <div class="post-tags">
           
-            <a href="/tags/java/" rel="tag"><i class="fa fa-tag"></i> java</a>
+            <a href="/tags/linux/" rel="tag"><i class="fa fa-tag"></i> linux</a>
           
-            <a href="/tags/xml/" rel="tag"><i class="fa fa-tag"></i> xml</a>
+            <a href="/tags/centos/" rel="tag"><i class="fa fa-tag"></i> centos</a>
+          
+            <a href="/tags/VMware/" rel="tag"><i class="fa fa-tag"></i> VMware</a>
           
         </div>
       
@@ -484,8 +500,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/06/20/java中获取类路径资源文件的几种方式/" rel="next" title="java中获取类路径资源文件的几种方式">
-                <i class="fa fa-chevron-left"></i> java中获取类路径资源文件的几种方式
+              <a href="/2019/06/30/Mybatis是如何打印日志的？/" rel="next" title="Mybatis是如何打印日志的？">
+                <i class="fa fa-chevron-left"></i> Mybatis是如何打印日志的？
               </a>
             
           </div>
@@ -493,10 +509,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/06/20/Mybatis资源获取工具类Resources/" rel="prev" title="Mybatis资源获取工具类Resources">
-                Mybatis资源获取工具类Resources <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -551,17 +563,8 @@
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            站点概览
-          </li>
-        </ul>
-      
 
-      <section class="site-overview-wrap sidebar-panel">
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -660,22 +663,6 @@
         </div>
       </section>
 
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一、从输入流获取Document"><span class="nav-number">1.</span> <span class="nav-text">一、从输入流获取Document</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二、解析Document"><span class="nav-number">2.</span> <span class="nav-text">二、解析Document</span></a></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
       
 
       
@@ -834,9 +821,9 @@
   
     <script type="text/javascript">
       var disqus_config = function () {
-        this.page.url = 'http://zzhkp.com/2019/06/20/java中对xml解析/';
-        this.page.identifier = '2019/06/20/java中对xml解析/';
-        this.page.title = 'java中对xml解析';
+        this.page.url = 'http://zzhkp.com/2019/07/27/VMware-CentOS7-静态IP配置/';
+        this.page.identifier = '2019/07/27/VMware-CentOS7-静态IP配置/';
+        this.page.title = 'VMware CentOS7 静态IP配置';
         };
       function loadComments () {
         var d = document, s = d.createElement('script');
